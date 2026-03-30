@@ -1,0 +1,145 @@
+{% extends "base.html" %} {% block title %}Insights - CycleSync{% endblock %} {%
+block content %}
+<div class="insights-page">
+  <h1>📊 Your Cycle Insights</h1>
+  <p>Discover patterns and understand your body better</p>
+
+  <div class="stats-overview">
+    <div class="stat-card">
+      <div class="stat-number">{{ stats.total_cycles }}</div>
+      <div class="stat-label">Total Cycles</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">
+        {{ stats.avg_cycle if stats.avg_cycle else '—' }}
+      </div>
+      <div class="stat-label">Avg Cycle Length</div>
+      <div class="stat-sub">days</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">
+        {{ stats.avg_period if stats.avg_period else '—' }}
+      </div>
+      <div class="stat-label">Avg Period Length</div>
+      <div class="stat-sub">days</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ stats.total_logs }}</div>
+      <div class="stat-label">Total Logs</div>
+    </div>
+  </div>
+
+  {% if mood_percentages %}
+  <div class="card">
+    <h3>🎭 Mood Distribution</h3>
+    <div class="mood-chart">
+      {% for mood, percentage in mood_percentages.items() %}
+      <div class="mood-bar">
+        <span class="mood-label">{{ mood }}:</span>
+        <div class="bar-container">
+          <div
+            class="bar-fill"
+            style="width: {{ percentage }}%; background: 
+                        {% if mood == 'happy' %}#FFB7B2
+                        {% elif mood == 'neutral' %}#E0E0E0
+                        {% elif mood == 'sad' %}#9BB8CD
+                        {% elif mood == 'anxious' %}#D9B8C4
+                        {% else %}#E6B8A2{% endif %}"
+          ></div>
+        </div>
+        <span class="percentage">{{ percentage }}%</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %} {% if top_symptoms %}
+  <div class="card">
+    <h3>🤒 Most Common Symptoms</h3>
+    <div class="symptom-list">
+      {% for symptom, count in top_symptoms %}
+      <div class="symptom-item">
+        <span class="symptom-name"
+          >{{ symptom.replace('_', ' ').title() }}</span
+        >
+        <div class="symptom-bar-container">
+          <div
+            class="symptom-bar"
+            style="width: {{ (count / top_symptoms[0][1] * 100) if top_symptoms else 0 }}%"
+          ></div>
+        </div>
+        <span class="symptom-count">{{ count }} days</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="encouragement-card">
+    <p>
+      🌸 Every body is unique. Keep tracking to discover what works best for
+      you!
+    </p>
+    <p>💕 You're doing amazing work understanding your cycle.</p>
+  </div>
+</div>
+
+<style>
+  .mood-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .mood-label {
+    width: 80px;
+    font-weight: 600;
+  }
+  .bar-container {
+    flex: 1;
+    height: 30px;
+    background: #f0f0f0;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    transition: width 1s ease;
+  }
+  .percentage {
+    width: 50px;
+    font-weight: 600;
+  }
+  .symptom-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .symptom-name {
+    width: 150px;
+    font-weight: 600;
+  }
+  .symptom-bar-container {
+    flex: 1;
+    height: 25px;
+    background: #f0f0f0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .symptom-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #ff9eb5, #ff8da1);
+    transition: width 1s ease;
+  }
+  .symptom-count {
+    width: 80px;
+  }
+  .encouragement-card {
+    background: linear-gradient(135deg, #ffe4e9, white);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    margin-top: 2rem;
+  }
+</style>
+{% endblock %}
